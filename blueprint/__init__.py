@@ -38,7 +38,8 @@ def shop_required(fn):
 ##########################
 # DATABASE
 ##########################
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:alta321@localhost:3306/ecommerce_project'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:alta321@localhost:3306/ecommerce_project'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:Altabatch3@ecommerceproject.cqrdpdi9guik.ap-southeast-1.rds.amazonaws.com:3306/ecommerce_project'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
