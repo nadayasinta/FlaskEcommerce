@@ -46,7 +46,7 @@ class ItemListResource(Resource):
         qry_item=Item.query.filter_by(status=True)
 
         if args['search_by_name'] is not None:
-            qry_item=qry_item.filter_by(name=args['search_by_name'])
+            qry_item=qry_item.filter(Item.name.like('%'+args['search_by_name']+'%'))
         
         if args['filter_by_shop_id'] is not None:
             qry_item=qry_item.filter_by(shop_id=args['filter_by_shop_id'])

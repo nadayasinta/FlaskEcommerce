@@ -78,22 +78,6 @@ class UserResource(Resource):
 
             return marshal(qry,User.response_fields), 200, {'Content-Type':'application/json'}
 
-# class DeleteUserResource(Resource):
-#     def options(self):
-#         return {'message' : 'success'}, 200
-
-    
-#     def delete(self,id):
-#         user_qry=User.query.get(my_id).first()
-#         if qry is None:
-#             return {'status' : 'NOT_FOUND', 'message' : 'User not found'}, 404
-#         else:
-#             user_id=marshal(user_qry,User.response_fields)[id]
-
-#             user_detail_qry=UserDetail.query.filter_by(user_id=user_id).first()
-#             shop_qry=Shop.query.filter_by(user_id=user_id).first()
-#             shop_id
-
 
 api.add_resource(SignUpResource, '/addnew')
 api.add_resource(UserResource, '/me')

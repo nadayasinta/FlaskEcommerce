@@ -46,8 +46,6 @@ class ShopSignUpResource(Resource):
             qry2.status = True
             db.session.commit()
 
-            # return {'message' : 'succesfully add Shop'}, 200
-
             return marshal(new_shop,Shop.response_fields), 200, {'Content-Type':'application/json'}
 
 class ShopDetailResource(Resource):
@@ -170,10 +168,6 @@ class ShopActivateResource(Resource):
             qry.status = False
             db.session.commit()
 
-            # qry2=User.query.get(my_id)
-            # qry2.status = False
-            # db.session.commit()
-
             my_shop_id=marshal(qry,Shop.response_fields)['id']
             qry3=Item.query.filter_by(shop_id=my_shop_id).all()
             for item in qry3:
@@ -195,10 +189,6 @@ class ShopActivateResource(Resource):
         else:
             qry.status = True
             db.session.commit()
-
-            # qry2=User.query.get(my_id)
-            # qry2.status = True
-            # db.session.commit()
 
             my_shop_id=marshal(qry,Shop.response_fields)['id']
             qry3=Item.query.filter_by(shop_id=my_shop_id).all()

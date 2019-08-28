@@ -195,7 +195,6 @@ class TransactionShopListResource(Resource):
     @jwt_required
     @shop_required
     def get(self):
-        #### filter by status
         claim = get_jwt_claims()
         my_id = claim['id']
 
@@ -260,12 +259,12 @@ class DoneTransactionResource(Resource):
                     
 
 
-api.add_resource(TransactionUserResource, '/me/<id>') #get
-api.add_resource(TransactionUserListResource, '/me/list') #get
+api.add_resource(TransactionUserResource, '/me/<id>')
+api.add_resource(TransactionUserListResource, '/me/list')
 
-api.add_resource(TransactionShopResource, '/shop/<id>') #delete put #get
-api.add_resource(TransactionShopListResource, '/shop/list') #get
-api.add_resource(DoneTransactionResource, '/shop/done/<id>') #put
+api.add_resource(TransactionShopResource, '/shop/<id>')
+api.add_resource(TransactionShopListResource, '/shop/list')
+api.add_resource(DoneTransactionResource, '/shop/done/<id>') 
 
 
         
