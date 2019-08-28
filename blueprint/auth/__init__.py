@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api, Resource, reqparse, marshal
 
-from flask_jwt_extended import create_access_token, get_jwt_claims
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, get_jwt_claims
 from blueprint import db
 
 from ..user.model import User
@@ -41,5 +41,13 @@ class LogInResource(Resource):
                 )
                 return {'token': token}, 200, {'Content-Type': 'application/json'}
 
+class RefreshTokenResources(Resource):
+    @jwt_required
+    def post(self):
+        current_user = get_jwt_identity()
+        current_claims = get_jwt_claims()
+        token = create_access_token(identity=current_user,user_claims=current_claims)
+        return {'token':token},200
 
 api.add_resource(LogInResource, '/login')
+api.add_resource(RefreshTokenResources, '/refresh')

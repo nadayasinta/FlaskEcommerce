@@ -35,7 +35,7 @@ class ItemListResource(Resource):
 
         parser.add_argument('p',type=int, location='args',default=1)
         parser.add_argument('rp',type=int, location='args',default=25)
-        parser.add_argument('search_by_nama',location='args', help='invalid title value')
+        parser.add_argument('search_by_name',location='args', help='invalid title value')
         parser.add_argument('filter_by_shop_id',location='args', help='invalid title value')       
         parser.add_argument('filter_by_category',location='args', help='invalid title value')        
         parser.add_argument('sort_by',location='args', help='invalid sort value',choices=('desc','asc'))
@@ -45,8 +45,8 @@ class ItemListResource(Resource):
 
         qry_item=Item.query.filter_by(status=True)
 
-        if args['search_by_nama'] is not None:
-            qry_item=qry_item.filter_by(name=args['search_by_nama'])
+        if args['search_by_name'] is not None:
+            qry_item=qry_item.filter_by(name=args['search_by_name'])
         
         if args['filter_by_shop_id'] is not None:
             qry_item=qry_item.filter_by(shop_id=args['filter_by_shop_id'])

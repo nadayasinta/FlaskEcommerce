@@ -78,20 +78,21 @@ class UserResource(Resource):
 
             return marshal(qry,User.response_fields), 200, {'Content-Type':'application/json'}
 
+# class DeleteUserResource(Resource):
+#     def options(self):
+#         return {'message' : 'success'}, 200
 
-    # @jwt_required
-    # def delete(self):
-    #     claim = get_jwt_claims()
-    #     my_id = claim['id']
+    
+#     def delete(self,id):
+#         user_qry=User.query.get(my_id).first()
+#         if qry is None:
+#             return {'status' : 'NOT_FOUND', 'message' : 'User not found'}, 404
+#         else:
+#             user_id=marshal(user_qry,User.response_fields)[id]
 
-    #     qry=User.query.get(my_id)
-    #     if qry is None:
-    #         return {'status' : 'NOT_FOUND', 'message' : 'User not found'}, 404
-    #     else:
-    #         db.session.delete(qry)
-    #         db.session.commit()
-    #         return {'message' : 'User has been deleted'}, 200
-
+#             user_detail_qry=UserDetail.query.filter_by(user_id=user_id).first()
+#             shop_qry=Shop.query.filter_by(user_id=user_id).first()
+#             shop_id
 
 
 api.add_resource(SignUpResource, '/addnew')

@@ -11,7 +11,6 @@ api = Api(bp_user_detail)
 
 
 class UserDetailResource(Resource):
-    ###apa perlu ada get semua?
     def options(self):
         return {'message' : 'success'}, 200
 
