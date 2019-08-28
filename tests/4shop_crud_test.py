@@ -59,8 +59,6 @@ class TestShopEndpoint():
 
     def test_shop_getme(self,client):
         token=shop_required()
-        # res = client.post('public/refresh',headers={'Authorization':'Bearer '+token})
-        # newtoken = json.loads(res.data)["token"]
         res = client.get('/shop/me',headers={'Authorization':'Bearer '+token})
         res_json = json.loads(res.data)
         assert res.status_code == 200
