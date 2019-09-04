@@ -109,10 +109,10 @@ class CartListResource(Resource):
         for cart in qry_cart.limit(args['rp']).offset(offset).all():
             cart_data = marshal(cart,Cart.response_fields)
             qry_item=Item.query.filter_by(id=cart_data['item_id']).filter_by(status=True).first()
-            if qry_item is None:
-                pass
-            else:
-                result.append({'cart':cart_data,'item':marshal(qry_item,Item.name_response_fields)})
+            # if qry_item is None:
+            #     pass
+            # else:
+            result.append({'cart':cart_data,'item':marshal(qry_item,Item.name_response_fields)})
 
         return result, 200, {'Content-Type':'application/json'}
 
@@ -131,34 +131,36 @@ class CheckoutResource(Resource):
         if qry_cart is None:
             return {'status' : 'NOT_FOUND', 'message' : 'Cart not found'}, 404
         else:
+            result=[]
             for cart in qry_cart:
                 cart_data = marshal(cart, Cart.response_fields)
                 qry_item = Item.query.filter_by(id=cart_data['item_id']).filter_by(status=True).first()
-                if qry_item is None:
-                    pass
-                    # return {'status' : 'NOT_FOUND', 'message' : 'Item not found'}, 404
+                # if qry_item is None:
+                #     pass
+                #     # return {'status' : 'NOT_FOUND', 'message' : 'Item not found'}, 404
+                # else:
+                item_data = marshal(qry_item, Cart.response_fields)
+                if int(item_data['qty'])<int(cart_data['qty']):
+                    return {'status' : 'NOT_FOUND', 'message' : 'Stok tidak mencukupi'}, 404
                 else:
-                    item_data = marshal(qry_item, Cart.response_fields)
-                    if int(item_data['qty'])<int(cart_data['qty']):
-                        return {'status' : 'NOT_FOUND', 'message' : 'Stok tidak mencukupi'}, 404
-                    else:
-                        cart.status = True
-                        db.session.commit()
+                    cart.status = True
+                    db.session.commit()
 
-                        my_qty = int(item_data['qty']) - int(cart_data['qty'])
+                    my_qty = int(item_data['qty']) - int(cart_data['qty'])
+                    
+                    qry_item.qty = my_qty 
+                    db.session.commit()
+
+                    new_transaction = Transaction(cart_data['id'], my_id, cart_data['item_id'], cart_data['date'],cart_data['duration'], cart_data['qty'], "waitpay",cart_data['price'])
                         
-                        qry_item.qty = my_qty 
-                        db.session.commit()
+                    app.logger.debug('DEBUG : %s', new_transaction)
+                    
+                    db.session.add(new_transaction)
+                    db.session.commit()
 
-                        new_transaction = Transaction(cart_data['id'], my_id, cart_data['item_id'], cart_data['date'],cart_data['duration'], cart_data['qty'], "waitpay",cart_data['price'])
-                            
-                        app.logger.debug('DEBUG : %s', new_transaction)
+                    result.append(marshal(new_transaction,Transaction.response_fields))
                         
-                        db.session.add(new_transaction)
-                        db.session.commit()
-
-            return {'message' : 'succesfully book the item'}, 200
-
+            return result, 200, {'Content-Type':'application/json'}
 
 api.add_resource(CartResource, '/<id>')
 api.add_resource(CartListResource, '/list')

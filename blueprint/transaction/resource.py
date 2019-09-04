@@ -11,14 +11,13 @@ from blueprint.user_detail.model import UserDetail
 
 
 
+
 bp_transaction = Blueprint('transaction',__name__)
 api = Api(bp_transaction)
-
 
 class TransactionUserResource(Resource):
     def options(self, id=None):
         return {'message' : 'success'}, 200
-
 
     @jwt_required
     def get(self,id):

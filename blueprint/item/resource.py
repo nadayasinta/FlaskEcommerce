@@ -87,16 +87,14 @@ class ItemListAllResource(Resource):
 
             qry_item=Item.query.filter_by(shop_id=my_shop_id).order_by(Item.status.desc())
 
-            if qry_item is None:
-                return {'status' : 'NOT_FOUND', 'message' : 'Item not found'}, 404
-            else:
-                result=[]
-                for item in qry_item.all():
-                    data_item = marshal(item,Item.response_fields)
-                    qry_shop = Shop.query.filter_by(id=data_item['shop_id']).first()
-                    result.append({'item':data_item,'shop':marshal(qry_shop,Shop.name_response_fields)})
+           
+            result=[]
+            for item in qry_item.all():
+                data_item = marshal(item,Item.response_fields)
+                qry_shop = Shop.query.filter_by(id=data_item['shop_id']).first()
+                result.append({'item':data_item,'shop':marshal(qry_shop,Shop.name_response_fields)})
 
-                return result, 200, {'Content-Type':'application/json'}
+            return result, 200, {'Content-Type':'application/json'}
 
 
 class ItemResource(Resource):
@@ -139,7 +137,7 @@ class ItemResource(Resource):
             db.session.add(new_item)
             db.session.commit()
 
-            return {'message' : 'succesfully add item'}, 200
+            return marshal(new_item,Item.response_fields), 200, {'Content-Type':'application/json'}
 
     
     @jwt_required
@@ -286,7 +284,7 @@ class NewCartResources(Resource):
                     db.session.add(new_cart)
                     db.session.commit()
 
-                    return {'message' : 'succesfully add item to cart'}, 200
+                    return marshal(new_cart,Cart.response_fields), 200, {'Content-Type':'application/json'}
 
         
         

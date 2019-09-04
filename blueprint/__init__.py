@@ -6,11 +6,24 @@ from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt_claims
 from flask_cors import CORS
 from datetime import timedelta
 from functools import wraps
-
+import config
+import os
 import json
 
 app = Flask(__name__)
 CORS(app)
+
+
+try:
+    env = os.environ.get('FLASK_ENV', 'development')
+    if env == 'testing':
+        app.config.from_object(config.TestingConfig)
+    else:
+        app.config.from_object(config.DevelopmentConfig)
+
+except Exception as e:
+    raise e
+
 
 app.config['APP_DEBUG'] = True
 
@@ -39,7 +52,7 @@ def shop_required(fn):
 # DATABASE
 ##########################
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:alta321@localhost:3306/ecommerce_project'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:Altabatch3@ecommerceproject.cqrdpdi9guik.ap-southeast-1.rds.amazonaws.com:3306/ecommerce_project'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:Altabatch3@ecommerceproject.cqrdpdi9guik.ap-southeast-1.rds.amazonaws.com:3306/ecommerce_project'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

@@ -1,7 +1,7 @@
 import pytest,json, logging
 from flask import Flask, request
-
-from blueprint import app
+from blueprint.user.model import User
+from blueprint import app, db
 from app import cache
 
 def call_client(request):
@@ -11,6 +11,16 @@ def call_client(request):
 @pytest.fixture
 def client(request):
     return call_client(request)
+
+
+def reset_database():
+    db.drop_all()
+    db.create_all()
+
+    user = User("unittesting2", "unittesting2", "unittesting2", False)
+
+    db.session.add(user)
+    db.session.commit()
 
 def shop_required():
     token = cache.get('test-shop-required')

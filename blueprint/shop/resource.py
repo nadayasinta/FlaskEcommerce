@@ -112,10 +112,10 @@ class ShopResource(Resource):
         my_id = claim['id']
 
         qry=Shop.query.filter_by(user_id=my_id).first()
-        if qry is None:
-            return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
-        else:
-            return marshal(qry,Shop.response_fields), 200, {'Content-Type':'application/json'}
+        # if qry is None:
+        #     return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
+        # else:
+        return marshal(qry,Shop.response_fields), 200, {'Content-Type':'application/json'}
     
     @jwt_required
     @shop_required
@@ -135,19 +135,19 @@ class ShopResource(Resource):
         args = parser.parse_args()
 
         qry=Shop.query.filter_by(user_id=my_id).filter_by(status=True).first()
-        if qry is None:
-            return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
-        else:
-            qry.user_id = my_id
-            qry.name = args['name']
-            qry.address = args['address']
-            qry.city = args['city']
-            qry.province = args['province']
-            qry.telephone = args['telephone']
-            qry.photo = args['photo']
-            db.session.commit()
+        # if qry is None:
+        #     return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
+        # else:
+        qry.user_id = my_id
+        qry.name = args['name']
+        qry.address = args['address']
+        qry.city = args['city']
+        qry.province = args['province']
+        qry.telephone = args['telephone']
+        qry.photo = args['photo']
+        db.session.commit()
 
-            return marshal(qry,Shop.response_fields), 200, {'Content-Type':'application/json'}
+        return marshal(qry,Shop.response_fields), 200, {'Content-Type':'application/json'}
 
 
 
@@ -162,19 +162,19 @@ class ShopActivateResource(Resource):
         my_id = claim['id']
 
         qry=Shop.query.filter_by(user_id=my_id).filter_by(status=True).first()
-        if qry is None:
-            return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
-        else:
-            qry.status = False
+        # if qry is None:
+        #     return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
+        # else:
+        qry.status = False
+        db.session.commit()
+
+        my_shop_id=marshal(qry,Shop.response_fields)['id']
+        qry3=Item.query.filter_by(shop_id=my_shop_id).all()
+        for item in qry3:
+            item.status = False
             db.session.commit()
 
-            my_shop_id=marshal(qry,Shop.response_fields)['id']
-            qry3=Item.query.filter_by(shop_id=my_shop_id).all()
-            for item in qry3:
-                item.status = False
-                db.session.commit()
-
-            return {'message' : 'Shop has been deactivate'}, 200
+        return {'message' : 'Shop has been deactivate'}, 200
 
            
     @jwt_required
@@ -184,19 +184,19 @@ class ShopActivateResource(Resource):
         my_id = claim['id']
 
         qry=Shop.query.filter_by(user_id=my_id).filter_by(status=False).first()
-        if qry is None:
-            return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
-        else:
-            qry.status = True
+        # if qry is None:
+        #     return {'status' : 'NOT_FOUND', 'message' : 'Shop not found'}, 404
+        # else:
+        qry.status = True
+        db.session.commit()
+
+        my_shop_id=marshal(qry,Shop.response_fields)['id']
+        qry3=Item.query.filter_by(shop_id=my_shop_id).all()
+        for item in qry3:
+            item.status = True
             db.session.commit()
 
-            my_shop_id=marshal(qry,Shop.response_fields)['id']
-            qry3=Item.query.filter_by(shop_id=my_shop_id).all()
-            for item in qry3:
-                item.status = True
-                db.session.commit()
-
-            return {'message' : 'Shop has been activate'}, 200
+        return {'message' : 'Shop has been activate'}, 200
 
 
 
